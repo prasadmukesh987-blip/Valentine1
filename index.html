@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Somi, Be My Valentine ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body { margin: 0; font-family: 'Arial', sans-serif; background: #ffdae0; height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 320px; z-index: 10; border: 2px solid #ff4d6d; }
@@ -13,9 +14,7 @@
         button { padding: 12px 20px; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         #yesBtn { background-color: #ff4d6d; color: white; }
         #noBtn { background-color: #cfd8dc; color: #37474f; }
-        .final-gif { width: 100%; border-radius: 15px; margin-top: 15px; }
-        .confetti { position: fixed; width: 10px; height: 10px; top: -20px; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+        .final-image { width: 100%; border-radius: 15px; margin-top: 15px; border: 3px solid #ff4d6d; }
     </style>
 </head>
 <body>
@@ -30,16 +29,15 @@
 
     <script>
         let noCount = 0;
-        // This is a direct, reliable link to the kidnapping GIF
-        const gifUrl = "https://media.giphy.com/media/Lndv9L66tA8mS46KNR/giphy.gif";
+        // Direct link to a stable image
+        const imgUrl = "https://www.shutterstock.com/shutterstock/photos/1723424164/display_1500/stock-vector-a-caveman-carrying-a-woman-to-his-cave-1723424164.jpg";
 
         const funnyMessages = [
             "Are you sure? 🤨",
-            "Think about the Biryani I'll buy you! 🍛",
-            "If you say no, I'll cry... loudly. 😭",
-            "Wait! Look behind you! (Say yes while you're distracted) 😂",
-            "Okay, fine. But I'm telling your mom. 😤",
-            "You have 3 seconds to change your mind... 🏃‍♂️"
+            "Think about the Biryani! 🍛",
+            "If you say no, I'll cry... 😭",
+            "Wait! Look behind you! 😂",
+            "Last chance... 😤"
         ];
 
         function handleChoice(choice) {
@@ -51,21 +49,19 @@
             } else {
                 if (noCount < funnyMessages.length) {
                     subText.innerText = funnyMessages[noCount];
-                    // Make the Yes button grow bigger so she has to click it!
                     let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
                     yesBtn.style.fontSize = (currentSize + 10) + "px";
                     noCount++;
                 } else {
-                    showFinal("CONGRATULATIONS!<br>U R MY VALENTINE! 🥳");
+                    showFinal("NO MATTER WHAT, I'M TAKING U FOR MY VALENTINE 😑");
                 }
             }
         }
 
         function showFinal(msg) {
             document.getElementById('mainCard').innerHTML = `
-                <h1 style="color: #ff0000;">${msg}</h1>
-                <p style="font-size:14px;">(I knew you couldn't resist) 😉</p>
-                <img class="final-gif" src="${gifUrl}">
+                <h1 style="color: #ff0000; font-size: 20px;">${msg}</h1>
+                <img class="final-image" src="${imgUrl}" alt="Kidnapping Image">
             `;
             spawnConfetti();
         }
@@ -73,13 +69,22 @@
         function spawnConfetti() {
             for (let i = 0; i < 100; i++) {
                 const c = document.createElement('div');
-                c.classList.add('confetti');
-                c.style.left = Math.random() * 100 + "vw";
+                c.style.position = 'fixed';
+                c.style.width = '10px';
+                c.style.height = '10px';
                 c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                c.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                c.style.left = Math.random() * 100 + "vw";
+                c.style.top = "-20px";
+                c.style.zIndex = "100";
+                c.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
                 document.body.appendChild(c);
             }
         }
+
+        // Add CSS for confetti animation
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }`;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
