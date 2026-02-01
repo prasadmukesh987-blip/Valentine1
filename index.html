@@ -4,52 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Somi, Be My Valentine ❤️</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            text-align: center;
-        }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 90%;
-            width: 350px;
-            border: 2px solid #ff4d6d;
-            position: relative;
-            z-index: 10;
-        }
-        h1 { color: #ff4d6d; font-size: 22px; }
-        #subText { color: #555; font-size: 18px; margin: 15px 0; min-height: 40px; }
+        body { margin: 0; font-family: 'Arial', sans-serif; background: #ffdae0; height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 320px; z-index: 10; border: 2px solid #ff4d6d; }
+        h1 { color: #d32f2f; font-size: 22px; }
+        #subText { color: #555; font-size: 18px; margin: 15px 0; min-height: 50px; }
         .btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        button {
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
+        button { padding: 12px 20px; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         #yesBtn { background-color: #ff4d6d; color: white; }
-        #noBtn { background-color: #cfd8dc; color: #455a64; }
-        .final-gif { width: 100%; border-radius: 15px; margin-top: 15px; display: block; }
+        #noBtn { background-color: #cfd8dc; color: #37474f; }
+        .final-gif { width: 100%; border-radius: 15px; margin-top: 15px; }
+        .confetti { position: fixed; width: 10px; height: 10px; top: -20px; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
     </style>
 </head>
 <body>
-
     <div class="card" id="mainCard">
         <h1 id="question">Somi, will you be my Valentine? ❤️</h1>
-        <p id="subText">Choose wisely 😊</p>
+        <p id="subText">Choose wisely! 😊</p>
         <div class="btns" id="btnGroup">
             <button id="yesBtn" onclick="handleChoice('yes')">Yes ❤️</button>
             <button id="noBtn" onclick="handleChoice('no')">No 🚫</button>
@@ -58,29 +30,28 @@
 
     <script>
         let noCount = 0;
-        // DIRECT GIF LINK - This version avoids the GIPHY "Not Available" screen
-        const gifUrl = "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A0eXF6bm9uYmt5eGZqZnd4eGZqZnd4eGZqZnd4eGZqZnd4eGZqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Lndv9L66tA8mS46KNR/giphy.gif";
+        // This is a direct, reliable link to the kidnapping GIF
+        const gifUrl = "https://media.giphy.com/media/Lndv9L66tA8mS46KNR/giphy.gif";
 
-        const noMessages = [
+        const funnyMessages = [
             "Are you sure? 🤨",
-            "Really sure?? 🥺",
-            "Think again... 🧐",
-            "I'll give you chocolate! 🍫",
-            "Last chance... 😤",
-            "You can't say no! 😂"
+            "Think about the Biryani I'll buy you! 🍛",
+            "If you say no, I'll cry... loudly. 😭",
+            "Wait! Look behind you! (Say yes while you're distracted) 😂",
+            "Okay, fine. But I'm telling your mom. 😤",
+            "You have 3 seconds to change your mind... 🏃‍♂️"
         ];
 
         function handleChoice(choice) {
-            const question = document.getElementById('question');
             const subText = document.getElementById('subText');
             const yesBtn = document.getElementById('yesBtn');
 
             if (choice === 'yes') {
-                showFinal("Vayyy!! Somi said YES! ❤️🥳");
+                showFinal("VAYYY! SOMI SAID YES! ❤️🥳");
             } else {
-                if (noCount < noMessages.length) {
-                    subText.innerText = noMessages[noCount];
-                    // Make Yes button grow
+                if (noCount < funnyMessages.length) {
+                    subText.innerText = funnyMessages[noCount];
+                    // Make the Yes button grow bigger so she has to click it!
                     let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
                     yesBtn.style.fontSize = (currentSize + 10) + "px";
                     noCount++;
@@ -93,17 +64,21 @@
         function showFinal(msg) {
             document.getElementById('mainCard').innerHTML = `
                 <h1 style="color: #ff0000;">${msg}</h1>
-                <img class="final-gif" src="${gifUrl}" alt="Valentine GIF">
+                <p style="font-size:14px;">(I knew you couldn't resist) 😉</p>
+                <img class="final-gif" src="${gifUrl}">
             `;
-            
-            // Firecrackers
-            var duration = 10 * 1000;
-            var end = Date.now() + duration;
-            (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff4d6d', '#ffd700'] });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff4d6d', '#ffd700'] });
-                if (Date.now() < end) { requestAnimationFrame(frame); }
-            }());
+            spawnConfetti();
+        }
+
+        function spawnConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const c = document.createElement('div');
+                c.classList.add('confetti');
+                c.style.left = Math.random() * 100 + "vw";
+                c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                c.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                document.body.appendChild(c);
+            }
         }
     </script>
 </body>
