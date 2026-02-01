@@ -14,7 +14,7 @@
         button { padding: 12px 20px; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         #yesBtn { background-color: #ff4d6d; color: white; }
         #noBtn { background-color: #cfd8dc; color: #37474f; }
-        .final-image { width: 100%; border-radius: 15px; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .final-image { width: 100%; border-radius: 15px; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -29,8 +29,8 @@
 
     <script>
         let noCount = 0;
-        // The image you selected: Real man carrying a woman on his shoulders
-        const imgUrl = "https://images.pexels.com/photos/1105058/pexels-photo-1105058.jpeg?auto=compress&cs=tinysrgb&w=800";
+        // This looks for the file you uploaded named "valentine.jpg"
+        const imgUrl = "./valentine.jpg";
 
         const funnyMessages = [
             "Are you sure? 🤨",
@@ -49,7 +49,7 @@
             } else {
                 if (noCount < funnyMessages.length) {
                     subText.innerText = funnyMessages[noCount];
-                    // Make the Yes button grow bigger each time
+                    // Make Yes button grow
                     let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
                     yesBtn.style.fontSize = (currentSize + 15) + "px";
                     noCount++;
@@ -62,9 +62,9 @@
         function showFinal(msg) {
             document.getElementById('mainCard').innerHTML = `
                 <h1 style="color: #ff0000; font-size: 16px;">${msg}</h1>
-                <img class="final-image" src="${imgUrl}" alt="Valentine Man Carrying Woman">
+                <img class="final-image" src="${imgUrl}" alt="Valentine Man Carrying Woman" onerror="this.style.display='none'; document.getElementById('mainCard').innerHTML += '<br>Image not found! Did you upload valentine.jpg?';">
             `;
-            // Trigger the firecrackers/confetti
+            // Trigger confetti
             confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
         }
     </script>
