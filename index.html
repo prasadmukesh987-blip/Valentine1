@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #ff9a9e, #fad0c4);
             height: 100vh;
             display: flex;
@@ -16,7 +16,6 @@
             overflow: hidden;
             text-align: center;
         }
-
         .card {
             background: white;
             padding: 40px;
@@ -25,17 +24,9 @@
             max-width: 400px;
             z-index: 10;
         }
-
         h1 { color: #ff4b2b; margin-bottom: 10px; }
-        #subText { color: #555; font-size: 18px; margin-bottom: 20px; }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
+        #subText { color: #555; font-size: 18px; margin-bottom: 20px; min-height: 50px; }
+        .buttons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
         button {
             padding: 12px 24px;
             font-size: 18px;
@@ -43,48 +34,21 @@
             border-radius: 10px;
             cursor: pointer;
             transition: 0.3s;
+            font-weight: bold;
         }
-
         #yesBtn { background-color: #ff4b2b; color: white; }
         #noBtn { background-color: #ccc; color: #333; }
-        
-        button:hover { transform: scale(1.1); }
-
-        #message {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #d32f2f;
-            display: none;
-        }
-
-        .final-gif {
-            width: 100%;
-            max-width: 300px;
-            border-radius: 15px;
-            margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Confetti Animation */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            top: -20px;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(720deg); }
-        }
+        #message { margin-top: 20px; font-size: 20px; font-weight: bold; color: #d32f2f; display: none; }
+        .final-gif { width: 100%; max-width: 300px; border-radius: 15px; margin-top: 15px; }
+        .confetti { position: fixed; width: 10px; height: 10px; top: -20px; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h1>Somi, will you be my Valentine? ❤️</h1>
-        <p id="subText">Choose wisely 😊</p>
+        <h1>Somi... ❤️</h1>
+        <p id="subText">Will you be my Valentine? 😊</p>
         
         <div class="buttons" id="btnGroup">
             <button id="yesBtn">Yes ❤️</button>
@@ -101,25 +65,33 @@
         const subText = document.getElementById('subText');
         const btnGroup = document.getElementById('btnGroup');
 
-        let step = 0;
+        let noCount = 0;
         const gifUrl = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A0eXF6bm9uYmt5eGZqZnd4eGZqZnd4eGZqZnd4eGZqZnd4eGZqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Lndv9L66tA8mS46KNR/giphy.gif";
 
+        const noMessages = [
+            "Are you sure? 🤨",
+            "Really sure?? 🥺",
+            "Think again... 🧐",
+            "I'll give you chocolate! 🍫",
+            "I'll give you cookies too! 🍪",
+            "Wait, look behind you! (Just kidding, say yes) 😂",
+            "You're breaking my heart... 💔",
+            "Okay, last last last chance! 😤"
+        ];
+
         yesBtn.addEventListener('click', () => {
-            if (step === 0) {
-                subText.innerText = "So YES.. you want to be my valentine? 😏";
-                step = 1;
-            } else {
-                showCelebration();
-            }
+            showCelebration();
         });
 
         noBtn.addEventListener('click', () => {
-            if (step === 0) {
-                subText.innerText = "Are you sure? 🤨 Try again.";
-                step = 2; // Move straight to the "Are you sure" logic
-            } else if (step === 1) {
-                subText.innerText = "Really sure? Last chance 🥺";
-                step = 2;
+            if (noCount < noMessages.length) {
+                subText.innerText = noMessages[noCount];
+                // Make the Yes button bigger each time she says No
+                let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
+                yesBtn.style.fontSize = (currentSize + 5) + "px";
+                yesBtn.style.padding = (parseInt(yesBtn.style.padding || 12) + 2) + "px " + (parseInt(yesBtn.style.paddingRight || 24) + 4) + "px";
+                
+                noCount++;
             } else {
                 playfulEnding();
             }
@@ -129,7 +101,7 @@
             btnGroup.style.display = 'none';
             subText.style.display = 'none';
             message.style.display = 'block';
-            message.innerHTML = `CONGRATULATIONS!<br>U R MY VALENTINE! 🥳<br>
+            message.innerHTML = `Vayyy!! Somi said YES! ❤️🥳<br>
             <img class="final-gif" src="${gifUrl}">`;
             showConfetti();
         }
@@ -139,6 +111,7 @@
             subText.style.display = 'none';
             message.style.display = 'block';
             message.innerHTML = `CONGRATULATIONS!<br>U R MY VALENTINE! 🥳<br>
+            <p style="font-size: 14px;">(Resistance was futile) 😂</p>
             <img class="final-gif" src="${gifUrl}">`;
             showConfetti();
         }
@@ -150,7 +123,6 @@
                 confetti.style.left = Math.random() * window.innerWidth + 'px';
                 confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
                 confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                confetti.style.opacity = Math.random();
                 document.body.appendChild(confetti);
                 setTimeout(() => confetti.remove(), 5000);
             }
