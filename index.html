@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body {
-            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            font-family: 'Arial Rounded MT Bold', sans-serif;
             background-color: #ffeef2;
             display: flex;
             flex-direction: column;
@@ -16,101 +16,88 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            text-align: center;
         }
         .card {
             background: white;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
-            text-align: center;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2);
+            max-width: 90%;
+            width: 350px;
             border: 2px solid #ff4d6d;
-            z-index: 10;
         }
-        h1 { color: #ff4d6d; font-size: 28px; margin-bottom: 30px; }
-        .btns { display: flex; justify-content: center; gap: 20px; }
+        h1 { color: #ff4d6d; font-size: 22px; }
+        .btns { margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
         button {
-            padding: 15px 35px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: 0.2s;
             font-weight: bold;
+            transition: 0.2s;
         }
         #yesBtn { background-color: #ff4d6d; color: white; }
         #noBtn { background-color: #cfd8dc; color: #455a64; }
-        button:hover { transform: scale(1.1); }
-        .final-gif { width: 100%; max-width: 350px; border-radius: 15px; margin-top: 20px; }
+        .final-gif { width: 100%; border-radius: 15px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
     <div class="card" id="mainCard">
-        <h1 id="displayHeader">Somi, will you be my Valentine? ❤️</h1>
+        <h1 id="question">Somi, will you be my Valentine? ❤️</h1>
         <div class="btns" id="btnGroup">
-            <button id="yesBtn" onclick="nextStep('yes')">Yes</button>
-            <button id="noBtn" onclick="nextStep('no')">No</button>
+            <button id="yesBtn" onclick="handleChoice('yes')">Yes</button>
+            <button id="noBtn" onclick="handleChoice('no')">No</button>
         </div>
     </div>
 
     <script>
-        let currentState = "start";
+        let step = 0;
 
-        function nextStep(choice) {
-            const header = document.getElementById('displayHeader');
-            
-            if (currentState === "start") {
+        function handleChoice(choice) {
+            const question = document.getElementById('question');
+
+            if (step === 0) {
                 if (choice === 'yes') {
-                    header.innerText = "So yes, u want to be my valentine? 😏";
-                    currentState = "confirm_yes";
+                    question.innerText = "So yes, u want to be my valentine? 😏";
+                    step = 1;
                 } else {
-                    header.innerText = "Are you sure? 🤨";
-                    currentState = "are_you_sure";
+                    question.innerText = "Are you sure? 🤨";
+                    step = 2;
                 }
             } 
-            else if (currentState === "confirm_yes") {
-                if (choice === 'yes') {
-                    triggerFinal();
+            else if (step === 1) {
+                // If she said Yes once, and says No now
+                if (choice === 'no') {
+                    question.innerText = "Are you sure? 🧐";
+                    step = 2;
                 } else {
-                    header.innerText = "Wait, are you sure? 🧐";
-                    currentState = "final_check";
+                    showFinal();
                 }
             }
-            else if (currentState === "are_you_sure" || currentState === "final_check") {
-                // Any choice at this point leads to the "kidnapping"
-                triggerFinal();
+            else if (step === 2) {
+                // Final stage: If she is "sure" she wants to say No
+                showFinal();
             }
         }
 
-        function triggerFinal() {
+        function showFinal() {
             document.getElementById('mainCard').innerHTML = `
-                <h1 style="color: #d00000;">CONGRATULATIONS!<br>U R MY VALENTINE! 🥳</h1>
-                <img class="final-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A0eXF6bm9uYmt5eGZqZnd4eGZqZnd4eGZqZnd4eGZqZnd4eGZqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Lndv9L66tA8mS46KNR/giphy.gif">
+                <h1 style="color: #ff0000;">CONGRATULATIONS!<br>U R MY VALENTINE! 🥳</h1>
+                <img class="final-gif" src="https://media.giphy.com/media/Lndv9L66tA8mS46KNR/giphy.gif" alt="Valentine Kidnap">
             `;
             
-            // Canvas Firecrackers logic
-            var end = Date.now() + (10 * 1000);
-            var colors = ['#ff4d6d', '#ff0000', '#ffd700'];
+            // Firecrackers Effect
+            var duration = 10 * 1000;
+            var end = Date.now() + duration;
 
             (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: colors
-                });
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff4d6d', '#ffd700'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff4d6d', '#ffd700'] });
 
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
+                if (Date.now() < end) { requestAnimationFrame(frame); }
             }());
         }
     </script>
