@@ -1,143 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Somi, Be My Valentine ❤️</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.card {
-  background: white;
-  padding: 40px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  max-width: 420px;
-}
-
-h1 { color: #ff4b5c; }
-
-.buttons {
-  margin-top: 25px;
-  position: relative;
-  height: 70px;
-}
-
-button {
-  padding: 12px 24px;
-  font-size: 16px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  margin: 10px;
-}
-
-#yesBtn {
-  background-color: #ff4b5c;
-  color: white;
-}
-
-#noBtn {
-  background-color: #ccc;
-}
-
-#message {
-  margin-top: 20px;
-  font-size: 20px;
-  display: none;
-}
-
-/* Confetti */
-.confetti {
-  position: fixed;
-  width: 8px;
-  height: 14px;
-  top: -20px;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  to { transform: translateY(110vh) rotate(720deg); }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Somi ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            background-color: #ffeef2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            text-align: center;
+            border: 2px solid #ff4d6d;
+            z-index: 10;
+        }
+        h1 { color: #ff4d6d; font-size: 28px; margin-bottom: 30px; }
+        .btns { display: flex; justify-content: center; gap: 20px; }
+        button {
+            padding: 15px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+        #yesBtn { background-color: #ff4d6d; color: white; }
+        #noBtn { background-color: #cfd8dc; color: #455a64; }
+        button:hover { transform: scale(1.1); }
+        .final-gif { width: 100%; max-width: 350px; border-radius: 15px; margin-top: 20px; }
+    </style>
 </head>
-
 <body>
 
-<div class="card">
-  <h1>Somi, will you be my Valentine? 💌</h1>
-  <p id="subText">Choose wisely 😄</p>
+    <div class="card" id="mainCard">
+        <h1 id="displayHeader">Somi, will you be my Valentine? ❤️</h1>
+        <div class="btns" id="btnGroup">
+            <button id="yesBtn" onclick="nextStep('yes')">Yes</button>
+            <button id="noBtn" onclick="nextStep('no')">No</button>
+        </div>
+    </div>
 
-  <div class="buttons">
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 🙈</button>
-  </div>
+    <script>
+        let currentState = "start";
 
-  <div id="message"></div>
-</div>
+        function nextStep(choice) {
+            const header = document.getElementById('displayHeader');
+            
+            if (currentState === "start") {
+                if (choice === 'yes') {
+                    header.innerText = "So yes, u want to be my valentine? 😏";
+                    currentState = "confirm_yes";
+                } else {
+                    header.innerText = "Are you sure? 🤨";
+                    currentState = "are_you_sure";
+                }
+            } 
+            else if (currentState === "confirm_yes") {
+                if (choice === 'yes') {
+                    triggerFinal();
+                } else {
+                    header.innerText = "Wait, are you sure? 🧐";
+                    currentState = "final_check";
+                }
+            }
+            else if (currentState === "are_you_sure" || currentState === "final_check") {
+                // Any choice at this point leads to the "kidnapping"
+                triggerFinal();
+            }
+        }
 
-<script>
-const yesBtn = document.getElementById('yesBtn');
-const noBtn = document.getElementById('noBtn');
-const message = document.getElementById('message');
-const subText = document.getElementById('subText');
+        function triggerFinal() {
+            document.getElementById('mainCard').innerHTML = `
+                <h1 style="color: #d00000;">CONGRATULATIONS!<br>U R MY VALENTINE! 🥳</h1>
+                <img class="final-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A0eXF6bm9uYmt5eGZqZnd4eGZqZnd4eGZqZnd4eGZqZnd4eGZqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Lndv9L66tA8mS46KNR/giphy.gif">
+            `;
+            
+            // Canvas Firecrackers logic
+            var end = Date.now() + (10 * 1000);
+            var colors = ['#ff4d6d', '#ff0000', '#ffd700'];
 
-let step = 0;
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
 
-yesBtn.addEventListener('click', () => {
-  if (step === 0) {
-    subText.innerText = 'So YES… you want to be my Valentine? 😌';
-    step = 1;
-  } else {
-    showCelebration();
-  }
-});
-
-noBtn.addEventListener('click', () => {
-  if (step === 0) {
-    subText.innerText = 'Are you sure? 🥺 Try again.';
-  } else if (step === 1) {
-    subText.innerText = 'Really sure? Last chance 😅';
-  } else {
-    playfulEnding();
-  }
-});
-
-function showCelebration() {
-  message.style.display = 'block';
-  message.innerHTML = 'Yayyy!! Somi said YES! ❤️🥰';
-  showConfetti();
-}
-
-function playfulEnding() {
-  message.style.display = 'block';
-  message.innerHTML = 'Plot twist 😜 — you are still my Valentine! 💘';
-  showConfetti();
-}
-
-function showConfetti() {
-  for (let i = 0; i < 120; i++) {
-    const confetti = document.createElement('div');
-    confetti.classList.add('confetti');
-    confetti.style.left = Math.random() * window.innerWidth + 'px';
-    confetti.style.backgroundColor = `hsl(${Math.random()*360}, 90%, 60%)`;
-    confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
-    document.body.appendChild(confetti);
-    setTimeout(() => confetti.remove(), 5000);
-  }
-}
-</script>
-
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
 </body>
 </html>
