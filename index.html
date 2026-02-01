@@ -8,13 +8,13 @@
     <style>
         body { margin: 0; font-family: 'Arial', sans-serif; background: #ffdae0; height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 320px; z-index: 10; border: 2px solid #ff4d6d; }
-        h1 { color: #d32f2f; font-size: 22px; }
+        h1 { color: #d32f2f; font-size: 18px; }
         #subText { color: #555; font-size: 18px; margin: 15px 0; min-height: 50px; }
         .btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         button { padding: 12px 20px; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         #yesBtn { background-color: #ff4d6d; color: white; }
         #noBtn { background-color: #cfd8dc; color: #37474f; }
-        .final-image { width: 100%; border-radius: 15px; margin-top: 15px; border: 2px solid #ff4d6d; }
+        .final-image { width: 100%; border-radius: 15px; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -29,8 +29,8 @@
 
     <script>
         let noCount = 0;
-        // High-reliability image of a man carrying a woman
-        const imgUrl = "https://www.shutterstock.com/shutterstock/photos/1110300182/display_1500/stock-vector-man-carrying-his-woman-on-shoulders-isolated-illustration-1110300182.jpg";
+        // The image you selected: Real man carrying a woman on his shoulders
+        const imgUrl = "https://images.pexels.com/photos/1105058/pexels-photo-1105058.jpeg?auto=compress&cs=tinysrgb&w=800";
 
         const funnyMessages = [
             "Are you sure? 🤨",
@@ -49,7 +49,7 @@
             } else {
                 if (noCount < funnyMessages.length) {
                     subText.innerText = funnyMessages[noCount];
-                    // Make the Yes button grow
+                    // Make the Yes button grow bigger each time
                     let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
                     yesBtn.style.fontSize = (currentSize + 15) + "px";
                     noCount++;
@@ -61,11 +61,11 @@
 
         function showFinal(msg) {
             document.getElementById('mainCard').innerHTML = `
-                <h1 style="color: #ff0000; font-size: 18px;">${msg}</h1>
-                <img class="final-image" src="${imgUrl}" alt="Valentine Pick-up">
+                <h1 style="color: #ff0000; font-size: 16px;">${msg}</h1>
+                <img class="final-image" src="${imgUrl}" alt="Valentine Man Carrying Woman">
             `;
-            // Trigger Firecrackers
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            // Trigger the firecrackers/confetti
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
         }
     </script>
 </body>
